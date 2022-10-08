@@ -3,7 +3,6 @@ import { useState } from "react";
 const App = () => {
   const [selected, setSelected] = useState(0);
   const [points, setPoints] = useState([0, 0, 0, 0, 0, 0]);
-  const [mostPopular, setMostPopular] = useState(0);
 
   const anecdotes = [
     "If it hurts, do it more often.",
@@ -15,11 +14,6 @@ const App = () => {
     "Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.",
   ];
 
-  function mostVotes(points) {
-    const pointsArr = [...points]
-    const topVotes = pointsArr.sort((a,b) => b-a)[0]
-    return points.indexOf(topVotes);
-  }
 
   function getRandomIntInclusive(min, max) {
     min = Math.ceil(min);
@@ -29,8 +23,14 @@ const App = () => {
 
   function handleVote() {
     setPoints(points.map((num, index) => (index === selected ? num + 1 : num)));
-    setMostPopular(mostVotes(points));
   }
+
+  const largestIndex = points.reduce(({largestIndex, largestValue}, point, i) => {
+          if (point > largestValue){
+              return {largestIndex:i, largestValue:point
+              }}
+          return {largestIndex, largestValue}
+      }, {largestIndex: -1, largestValue: -1}).largestIndex;
 
   return (
       <div>
@@ -44,7 +44,7 @@ const App = () => {
           next anecdote
         </button>
         <h1>Anecdote with most votes</h1>
-        {anecdotes[mostPopular]} has {points[mostPopular]} votes
+          {anecdotes[largestIndex]} has {points[largestIndex]} votes
       </div>
   );
 };
